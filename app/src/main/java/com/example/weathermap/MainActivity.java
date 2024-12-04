@@ -13,7 +13,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import android.graphics.Color;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            getWindow().getDecorView().setSystemUiVisibility(0);
             getWindow().setStatusBarColor(Color.parseColor("#001e33"));
         }
 
@@ -105,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
     }
-
 
     private int getImageResourceForWeather(String weatherCondition) {
         if (weatherCondition.contains("clear")) {
