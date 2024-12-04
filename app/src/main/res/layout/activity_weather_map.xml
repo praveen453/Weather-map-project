@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Dropdown Menu -->
+    <Spinner
+        android:id="@+id/cityDropdown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dropdown"
+        android:prompt="@string/select_city" />
+
+    <!-- Button to Fetch Weather -->
+    <Button
+        android:id="@+id/getWeatherButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Get Weather" />
+
+    <!-- Display Weather Information -->
+    <TextView
+        android:id="@+id/weatherInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Weather Information Will Appear Here"
+        android:textSize="16sp"
+        android:paddingTop="20dp"
+        android:visibility="gone" />
+</LinearLayout>
