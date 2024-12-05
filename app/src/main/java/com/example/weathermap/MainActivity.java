@@ -1,7 +1,10 @@
 package com.example.weathermap;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -28,15 +31,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Status bar styling
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             getWindow().setStatusBarColor(Color.parseColor("#001e33"));
         }
 
+        // Initialize Views
         cityDropdown = findViewById(R.id.cityDropdown);
         weatherInfo = findViewById(R.id.weatherInfo);
         weatherImage = findViewById(R.id.weatherImage);
 
+        // City dropdown setup
         String[] cities = {"New York", "London", "Tokyo", "Colombo", "Dubai"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, cities);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -54,6 +60,22 @@ public class MainActivity extends AppCompatActivity {
                 selectedCity = "";
             }
         });
+
+        // Apply animations
+        applyAnimations();
+    }
+
+    private void applyAnimations() {
+        // Load animations
+        Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        Animation slideDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
+
+        // Apply fade-in animation to TextView and ImageView
+        weatherInfo.startAnimation(fadeIn);
+        weatherImage.startAnimation(fadeIn);
+
+        // Apply slide-down animation to Spinner
+        cityDropdown.startAnimation(slideDown);
     }
 
     private void fetchWeatherData(String city) {
