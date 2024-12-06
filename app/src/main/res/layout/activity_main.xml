@@ -34,6 +34,7 @@
         android:background="@drawable/rounded_spinner"
         android:contentDescription="City Dropdown"
         android:spinnerMode="dropdown"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
@@ -50,6 +51,7 @@
         android:textColor="#DCE3E3"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.082"
@@ -57,12 +59,25 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.226" />
 
+    <ProgressBar
+        android:id="@+id/loadingSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminate="true"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
     <TextView
         android:id="@+id/weatherInfo"
         android:layout_width="365dp"
         android:layout_height="150dp"
         android:paddingTop="25dp"
-        android:text="Weather Information Will Appear Here"
+        android:text=""
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="20sp"
@@ -74,18 +89,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.309" />
 
-    <ImageView
-        android:id="@+id/weatherImage"
-        android:layout_width="370dp"
-        android:layout_height="279dp"
-        android:scaleType="fitCenter"
+
+    <VideoView
+        android:id="@+id/weatherVideo"
+        android:layout_width="394dp"
+        android:layout_height="298dp"
+        android:layout_gravity="center"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintHorizontal_bias="0.47"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.659" />
+        app:layout_constraintVertical_bias="0.595" />
 
     <TextView
         android:id="@+id/textView2"

@@ -16,7 +16,8 @@
         <activity
             android:name=".WeatherMap"
             android:theme="@style/AppTheme"
-            android:exported="true">
+            android:exported="true"
+            tools:ignore="MissingClass">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

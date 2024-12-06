@@ -7,9 +7,10 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.ProgressBar;
+import android.widget.VideoView;
 import androidx.appcompat.app.AppCompatActivity;
 import org.json.JSONObject;
 import java.io.BufferedReader;
@@ -21,7 +22,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Spinner cityDropdown;
     private TextView weatherInfo;
-    private ImageView weatherImage;
+    private VideoView weatherVideo;
+    private ProgressBar loadingSpinner; // Add ProgressBar
 
     private String selectedCity = "";
     private final String API_KEY = "c06353f97ed6135d2074d67e5ac62585";
@@ -31,23 +33,25 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Status bar styling
+        // Change status bar color and visibility
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             getWindow().setStatusBarColor(Color.parseColor("#001e33"));
         }
 
-        // Initialize Views
+        // Initialize UI components
         cityDropdown = findViewById(R.id.cityDropdown);
         weatherInfo = findViewById(R.id.weatherInfo);
-        weatherImage = findViewById(R.id.weatherImage);
+        weatherVideo = findViewById(R.id.weatherVideo);
+        loadingSpinner = findViewById(R.id.loadingSpinner); // Link ProgressBar
 
-        // City dropdown setup
+        // Dropdown cities
         String[] cities = {"New York", "London", "Tokyo", "Colombo", "Dubai"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, cities);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         cityDropdown.setAdapter(adapter);
 
+        // Handle city selection
         cityDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -61,24 +65,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Apply animations
-        applyAnimations();
+        applyAnimations(); // Apply animations to components
     }
 
     private void applyAnimations() {
-        // Load animations
         Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
         Animation slideDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
 
-        // Apply fade-in animation to TextView and ImageView
         weatherInfo.startAnimation(fadeIn);
-        weatherImage.startAnimation(fadeIn);
-
-        // Apply slide-down animation to Spinner
+        weatherVideo.startAnimation(fadeIn); // Animate VideoView
         cityDropdown.startAnimation(slideDown);
     }
 
     private void fetchWeatherData(String city) {
+        // Show loading spinner and hide the current UI elements while loading
+        runOnUiThread(() -> {
+            loadingSpinner.setVisibility(View.VISIBLE); // Show loading spinner
+            weatherInfo.setVisibility(View.GONE); // Hide weather info
+            weatherVideo.setVisibility(View.GONE); // Hide video
+        });
+
         new Thread(() -> {
             try {
                 String apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + API_KEY + "&units=metric";
@@ -100,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 String weatherCondition = description.toLowerCase();
                 String windSpeed = jsonResponse.getJSONObject("wind").getString("speed") + " m/s";
 
-                int imageResource = getImageResourceForWeather(weatherCondition);
+                int videoResource = getVideoResourceForWeather(weatherCondition);
 
                 String weatherDetails = "City: " + city + "\n" +
                         "Temperature: " + temperature + "\n" +
@@ -111,34 +117,39 @@ public class MainActivity extends AppCompatActivity {
                     weatherInfo.setText(weatherDetails);
                     weatherInfo.setVisibility(View.VISIBLE);
 
-                    if (imageResource != 0) {
-                        weatherImage.setImageResource(imageResource);
-                        weatherImage.setVisibility(View.VISIBLE);
+                    if (videoResource != 0) {
+                        weatherVideo.setVideoPath("android.resource://" + getPackageName() + "/" + videoResource);
+                        weatherVideo.setVisibility(View.VISIBLE);
+                        weatherVideo.start();
                     } else {
-                        weatherImage.setVisibility(View.GONE);
+                        weatherVideo.setVisibility(View.GONE);
                     }
+                    loadingSpinner.setVisibility(View.GONE); // Hide loading spinner
                 });
 
             } catch (Exception e) {
                 e.printStackTrace();
-                runOnUiThread(() -> weatherInfo.setText("Error fetching weather data!"));
+                runOnUiThread(() -> {
+                    weatherInfo.setText("Error fetching weather data!");
+                    loadingSpinner.setVisibility(View.GONE); // Hide loading spinner on error
+                });
             }
         }).start();
     }
 
-    private int getImageResourceForWeather(String weatherCondition) {
+    private int getVideoResourceForWeather(String weatherCondition) {
         if (weatherCondition.contains("clear")) {
-            return R.drawable.clear;
+            return R.raw.clear_video; // Clear sky video
         } else if (weatherCondition.contains("rain")) {
-            return R.drawable.rain;
+            return R.raw.rain_video; // Rain video
         } else if (weatherCondition.contains("cloud")) {
-            return R.drawable.overcast_cloudy;
+            return R.raw.cloudy_video; // Cloudy weather video
         } else if (weatherCondition.contains("snow")) {
-            return R.drawable.snowy;
+            return R.raw.snow_video; // Snowfall video
         } else if (weatherCondition.contains("thunderstorm")) {
-            return R.drawable.thunderstorm;
+            return R.raw.thunderstorm_video; // Thunderstorm video
         } else {
-            return R.drawable.default_weather;
+            return 0; // No video found
         }
     }
 }
